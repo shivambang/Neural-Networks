@@ -4,14 +4,16 @@ class DeepNet(nn.Module):
     def __init__(self, layerSize) -> None:
         super(DeepNet, self).__init__()
         self.layers = nn.ModuleList()
+        self.relu = nn.ReLU()
+        self.sigm = nn.Sigmoid()
         for inp_size, out_size in zip(layerSize[:-1], layerSize[1:]):
             self.layers.append(nn.Linear(inp_size, out_size))
     
     def forward(self, x):
         for linear in self.layers[:-1]:
             x = linear(x)
-            x = nn.ReLU(x)
+            x = self.relu(x)
         linear = self.layers[-1]
         out = linear(x)
-        out = nn.Sigmoid(out)
+        out = self.sigm(out)
         return out
