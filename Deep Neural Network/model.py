@@ -1,9 +1,10 @@
 import torch.nn as nn
 
 class DeepNet(nn.Module):
-    def __init__(self, layerSize) -> None:
+    def __init__(self, layerSize, p=0) -> None:
         super(DeepNet, self).__init__()
         self.layers = nn.ModuleList()
+        self.drop = nn.Dropout(p=p)
         self.relu = nn.ReLU()
         self.sigm = nn.Sigmoid()
         for inp_size, out_size in zip(layerSize[:-1], layerSize[1:]):
@@ -13,6 +14,7 @@ class DeepNet(nn.Module):
         for linear in self.layers[:-1]:
             x = linear(x)
             x = self.relu(x)
+            x = self.drop(x)
         linear = self.layers[-1]
         out = linear(x)
         out = self.sigm(out)

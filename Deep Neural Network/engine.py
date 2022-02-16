@@ -1,16 +1,26 @@
+import torch
 import eval
+import numpy as np
 from torch import Tensor
 from torch.autograd import Variable
-
+from data import add_noise, normalize
+from random import randint
 def train(data, target, model, criterion, optimizer, epochs):
     model.train()
-    data = Variable(Tensor([data]))
+    clean_data = Variable(Tensor([data]))
     target = Variable(Tensor([target]))
-    for _ in range(epochs):
+    for e in range(epochs):
     
         # Forward pass: Compute predicted y by passing x to the model
-        pred_y = model(data)
-    
+        if e % 2 == 0:
+            pred_y = model(clean_data)
+        else:
+            noisy_data = []
+            for d in data:
+                nd = add_noise(np.copy(d), cx=0.25, sigma=randint(1, 9)/10**randint(1, 3))
+                noisy_data.append(normalize(nd))
+            pred_y = model(Variable(Tensor([noisy_data])))
+
         # Compute loss
         loss = criterion(pred_y, target)
     
@@ -39,12 +49,13 @@ def generate_rescaled_inputs(data):
 
 def generate_predictions(data, model):
     predicted_output = []
-    
-    for i in range(len(data)):
-        p = model(Variable(Tensor([data[i]]))).cpu().detach().numpy()
-        p = p.reshape(16, 16)
-        p[p <= 0.5] = 0
-        p[p > 0.5] = 1
-        predicted_output.append(p)
+    with torch.no_grad():
+        data = Variable(Tensor([data]))
+        pred = model(data).cpu().detach().numpy()[0]
+        for p in pred:
+            p = p.reshape(16, 16)
+            p[p <= 0.5] = 0
+            p[p > 0.5] = 1
+            predicted_output.append(p)
     
     return predicted_output
