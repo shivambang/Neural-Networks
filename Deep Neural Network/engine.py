@@ -7,8 +7,8 @@ from data import add_noise, normalize
 from random import randint
 def train(data, target, model, criterion, optimizer, epochs):
     model.train()
-    clean_data = Variable(Tensor([data]))
-    target = Variable(Tensor([target]))
+    clean_data = Variable(Tensor(data))
+    target = Variable(Tensor(target))
     for e in range(epochs):
     
         # Forward pass: Compute predicted y by passing x to the model
@@ -19,7 +19,8 @@ def train(data, target, model, criterion, optimizer, epochs):
             for d in data:
                 nd = add_noise(np.copy(d), cx=0.25, sigma=randint(1, 9)/10**randint(1, 3))
                 noisy_data.append(normalize(nd))
-            pred_y = model(Variable(Tensor([noisy_data])))
+            noisy_data = np.array(noisy_data)
+            pred_y = model(Variable(Tensor(noisy_data)))
 
         # Compute loss
         loss = criterion(pred_y, target)
@@ -50,8 +51,8 @@ def generate_rescaled_inputs(data):
 def generate_predictions(data, model):
     predicted_output = []
     with torch.no_grad():
-        data = Variable(Tensor([data]))
-        pred = model(data).cpu().detach().numpy()[0]
+        data = Variable(Tensor(data))
+        pred = model(data).cpu().detach().numpy()
         for p in pred:
             p = p.reshape(16, 16)
             p[p <= 0.5] = 0
