@@ -23,7 +23,8 @@ for i in chars:
     serif.append(np.array(final_img, dtype=np.float32).flatten())
 
 percent_neurons = [0, 0.1, 0.25, 0.5, 0.8, -0.1, -0.25, -0.5, -0.8]
-for pn in itertools.product(percent_neurons, repeat=2):
+n = 1
+for pn in itertools.product(percent_neurons, repeat=n):
     lsize = [256]
     for p in pn:
         lsize += [int(lsize[-1]*(1+p))]
@@ -40,7 +41,7 @@ for pn in itertools.product(percent_neurons, repeat=2):
         pred, err = test(data=serif, target=sans, model=model)
         c = [np.mean(err[0]), np.mean(err[1]), np.median(err[0]), np.median(err[1]), np.std(err[0]), np.std(err[1])]
         cv += [['Test', epochs] + list(map(lambda x: round(x, 3), c))]
-    with open('config_test.csv', 'a+', newline='') as f:
+    with open(f'config_test_{n}.csv', 'a+', newline='') as f:
         cw = csv.writer(f)
         cw.writerow(['Size'] + lsize)
         cw.writerows(cv)
