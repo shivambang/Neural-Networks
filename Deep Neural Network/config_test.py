@@ -26,8 +26,9 @@ sans = np.array(sans)
 serif = np.array(serif)
 percent_neurons = [0, 0.1, 0.25, 0.5, 0.8, -0.1, -0.25, -0.5, -0.8]
 n = 3
+i = 0
 cp = itertools.product(percent_neurons, repeat=n)
-for _, pn in enumerate(cp):
+for pn in cp:
     lsize = [256]
     for p in pn:
         lsize += [int(lsize[-1]*(1+p))]
@@ -48,5 +49,6 @@ for _, pn in enumerate(cp):
         cw = csv.writer(f)
         cw.writerow(['Size'] + lsize)
         cw.writerows(cv)
-    comp = _//(len(percent_neurons)**n) 
+    i += 1
+    comp = i//(len(percent_neurons)**n) 
     print(str(comp).zfill(3), '\b\b\b\b', end='')
