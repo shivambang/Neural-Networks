@@ -1,3 +1,5 @@
+import torch
+from torch import tensor
 import torch.nn as nn
 
 class DeepNet(nn.Module):

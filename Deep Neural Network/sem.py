@@ -1,4 +1,6 @@
-syms = [" |-/\\^v<>"]
+import numpy as np
+chars = [i for i in range(48, 48+10)] + [i for i in range(65, 65+26)]
+syms = " |-/\\^v<>"
 d = {}
 for i, c in enumerate(syms):
     d[c] = [0]*9
@@ -7,7 +9,7 @@ semr = {}
 semr['0'] = '/-\\| |\\-/'
 semr['1'] = '-|  |  | '
 semr['2'] = '--\\ / |--'
-semr['3'] = ' -| < -|'
+semr['3'] = ' -| <  -|'
 semr['4'] = ' / / | |-'
 semr['5'] = '|- |-\\ -/'
 semr['6'] = '/- |-\\\\-/'
@@ -39,4 +41,10 @@ semr['V'] = '| |\\ / - '
 semr['W'] = '| ||^|\\ /'
 semr['X'] = '\\ / - / \\'
 semr['Y'] = '\\ / -  | '
-semr['Z'] = '--/  / /--'
+semr['Z'] = '--/ / /--'
+sem_data = []
+for c in chars:
+    vecr = []
+    for i in semr[chr(c)]:
+        vecr += d[i]
+    sem_data.append(vecr)

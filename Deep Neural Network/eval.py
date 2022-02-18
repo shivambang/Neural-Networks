@@ -16,7 +16,7 @@ def calculate_matching_black_pixels(data1, data2):
     match_ctr = 0
     inp = data1.flatten()
     pred = data2.flatten()
-    for i in range(256):
+    for i in range(len(pred)):
         match_ctr += 1 if(inp[i]==0 and pred[i]==0) else 0
     return match_ctr
 
@@ -24,7 +24,7 @@ def calculate_mismatching_black_pixels(data1, data2):
     mismatch_ctr = 0
     inp = data1.flatten()
     pred = data2.flatten()
-    for i in range(256):
+    for i in range(len(pred)):
         mismatch_ctr += 1 if(inp[i]==1 and pred[i]==0) else 0
     return mismatch_ctr
 
